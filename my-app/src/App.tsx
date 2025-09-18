@@ -1,6 +1,8 @@
-import GlassLiquidButton from "./GlassLiquidButton";
+//import GlassLiquidButton from "./GlassLiquidButton";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import NextPage from "./NextPage";
+import GlassSurface from "./components/GlassSurface";
+
 
 export function Home() {
   const navigate = useNavigate();
@@ -10,10 +12,30 @@ export function Home() {
   const BTN_W = 330;
   const BTN_H = 80;
 
-  const handleGo = () => {
-    sessionStorage.setItem("requestPlayWave", "1");
+  const handleGo = async () => {
+  // Ask NextPage to try as a fallback
+  sessionStorage.setItem("requestPlayWave", "1");
+
+  try {
+    const a = new Audio("/audio/con la.mp4"); 
+    a.loop = true;
+
+    // Start during the click (user gesture) so it isn't blocked
+    await a.play();
+
+    // Keep a handle so NextPage can reuse it
+    (window as Window & { __bgAudio?: HTMLAudioElement }).__bgAudio = a;
+
+    // Mark as already played for this tab
+    sessionStorage.setItem("audioPlayedOnce", "1");
+  } catch (err) {
+    console.warn("Audio play() blocked:", err);
+    // NextPage will attempt once more if needed
+  } finally {
+    // Navigate after attempting to start audio
     navigate("/next");
-  };
+  }
+};
 
   return (
     <div
@@ -21,7 +43,7 @@ export function Home() {
         minHeight: "100vh",
         display: "grid",
         placeItems: "center",
-        backgroundColor: "#68b8ddff", 
+        backgroundColor: "#1d1d1dff", 
       }}
     >
       
@@ -35,21 +57,6 @@ export function Home() {
           boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
         }}
       >
-
-    {/*    <img
-          src="/images/background.jpg"
-          alt=""
-          draggable="false"
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            pointerEvents: "none", 
-          }}
-        /> */}
 
         <video
           src="/videos/water.mp4"
@@ -65,7 +72,7 @@ export function Home() {
             objectFit: "cover",
             pointerEvents: "none",
           }}
-        />
+        /> 
 
    
         <div
@@ -87,22 +94,30 @@ export function Home() {
             placeItems: "center",
           }}
         >  
-          <GlassLiquidButton
-            onClick={handleGo}
+
+          
+
+          <GlassSurface
             width={BTN_W}
             height={BTN_H}
-            radius={18}
-            tint="#ffffffff"
-            transparency={0}   
-            blurPx={0.1}          
-            hoverShadow={80}
-            hoverShadowSize={0.4}  
-            hoverLift={3} 
-            rippleStrength={18}
-            rippleSpeedSec={10}
+            borderRadius={30}
+            blur={5}
+            brightness={60}
+            opacity={0.9}
+            backgroundOpacity={0.08}
+            saturation={1.2}
+            glowColor="255,255,255"      // ← white glow (use "r,g,b")
+            glowIntensity={0.60}
+            glowRadius={10}           // smaller blur
+            glowSpread={-3}         // ← 0–1 strength
+            onClick={handleGo}
+            className="relative cursor-pointer transition-transform hover:scale-105 active:scale-95"
           >
-            Launch Me
-          </GlassLiquidButton>
+            <span className="relative z-10 text-xl font-semibold text-white select-none">
+              Launch Me
+            </span>
+          </GlassSurface>
+       
         </div>
       </div> 
     </div>

@@ -30,7 +30,7 @@ export default function NextPage() {
     sessionStorage.removeItem("requestPlayWave");
 
     if (shouldPlay && !already) {
-      const a = new Audio("/audio/con la.mp4"); 
+      const a = new Audio("/audio/con-la.mp4"); 
       a.loop = true;
       audioRef.current = a;
 
