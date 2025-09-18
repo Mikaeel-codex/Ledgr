@@ -1,0 +1,5 @@
+/* --- reset the Vite starter layout --- */
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; width: 100%; margin: 0; padding: 0; }
+#root { max-width: none; }      /* remove the 1280px cap */
+body { background: #0a0f1a; }   /* page bg behind your app */
