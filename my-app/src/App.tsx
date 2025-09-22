@@ -9,8 +9,8 @@ export function Home() {
 
   const VIDEO_W = 530; 
   const VIDEO_H = 350; 
-  const BTN_W = 330;
-  const BTN_H = 80;
+  const BTN_W = 300;
+  const BTN_H = 70;
 
   const handleGo = async () => {
   // Ask NextPage to try as a fallback
